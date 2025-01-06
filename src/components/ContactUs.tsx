@@ -1,14 +1,14 @@
-import ContactInfoCard from '@/components/ContactInfoCard'
-import { Mail, Phone, MapPinned, Clock5, Instagram } from 'lucide-react'
+import ContactInfoCard from "@/components/ContactInfoCard"
+import { Mail, Phone, MapPinned, Clock5, Instagram } from "lucide-react"
 
 export default async function ContactUs() {
   return (
-    <section id="contactUs" className="bg-purple-200 star-pattern">
-      <div className="container mx-auto py-20 max-w-6xl px-4">
-        <h2 className="text-center font-title text-purple-950 text-4xl font-bold mb-12">
+    <section id="contactUs" className="star-pattern bg-purple-200">
+      <div className="container mx-auto max-w-6xl px-4 py-20">
+        <h2 className="mb-12 text-center font-title text-4xl font-bold text-purple-950">
           Contáctame
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-1">
+        <div className="grid grid-cols-2 gap-1 md:grid-cols-3">
           <ContactInfoCard
             icon={<MapPinned className="size-8" />}
             info="Ciudad Guayana, Pto. Ordaz, Villa Africana"

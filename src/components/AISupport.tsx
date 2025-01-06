@@ -1,29 +1,29 @@
-'use client'
-import { X } from 'lucide-react'
-import { PopoverClose } from '@radix-ui/react-popover'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { SendHorizontal } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Bot, Ellipsis } from 'lucide-react'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+"use client"
+import { X } from "lucide-react"
+import { PopoverClose } from "@radix-ui/react-popover"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { SendHorizontal } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Bot, Ellipsis } from "lucide-react"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { Button } from "@/components/ui/button"
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
-import { useState, useRef, useEffect } from 'react'
-import { Message } from '@/types/message'
-import { twMerge } from 'tailwind-merge'
+import { useState, useRef, useEffect } from "react"
+import { Message } from "@/types/message"
+import { twMerge } from "tailwind-merge"
 
-import { useMediaQuery } from '@uidotdev/usehooks'
+import { useMediaQuery } from "@uidotdev/usehooks"
 
 const formSchema = z.object({
   message: z.string(),
 })
 
 export default function AISupport() {
-  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const isDesktop = useMediaQuery("(min-width: 640px)")
   const [isOpen, setIsOpen] = useState(false)
 
   const chatboxRef = useRef<HTMLDivElement>(null)
@@ -31,15 +31,15 @@ export default function AISupport() {
   const [isLoading, setIsLoading] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: '¡Hola! mi nombre es NailsBot, ¿en qué puedo ayudarte? ',
-      role: 'model',
+      text: "¡Hola! mi nombre es NailsBot, ¿en qué puedo ayudarte? ",
+      role: "model",
     },
   ])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      message: '',
+      message: "",
     },
   })
 
@@ -48,7 +48,7 @@ export default function AISupport() {
       ...messages,
       {
         text: values.message,
-        role: 'user',
+        role: "user",
       } satisfies Message,
     ]
 
@@ -57,10 +57,10 @@ export default function AISupport() {
     form.reset()
     setIsLoading(true)
 
-    fetch('/api/chatbot', {
-      method: 'POST',
+    fetch("/api/chatbot", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(newMessages),
     }).then(async (response) => {
@@ -71,7 +71,7 @@ export default function AISupport() {
         ...prev,
         {
           text: parsed.result,
-          role: 'model',
+          role: "model",
         },
       ])
       setIsLoading(false)
@@ -88,17 +88,17 @@ export default function AISupport() {
 
   useEffect(() => {
     if (isOpen && !isDesktop) {
-      document.body.classList.add('overflow-hidden')
+      document.body.classList.add("overflow-hidden")
       return
     }
 
-    document.body.classList.remove('overflow-hidden')
+    document.body.classList.remove("overflow-hidden")
   }, [isOpen, isDesktop])
 
   return (
     <Popover open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
       <PopoverTrigger asChild>
-        <div className="fixed bottom-4 right-4 bg-purple-900 rounded-full z-10 items-center flex justify-center p-4 cursor-pointer">
+        <div className="fixed bottom-4 right-4 z-10 flex cursor-pointer items-center justify-center rounded-full bg-purple-900 p-4">
           <Bot className="size-6 text-purple-100" />
         </div>
       </PopoverTrigger>
@@ -108,27 +108,27 @@ export default function AISupport() {
         align="end"
         sideOffset={isDesktop ? 16 : -72}
         alignOffset={isDesktop ? 0 : -16}
-        className="p-0 overflow-hidden rounded-none sm:rounded-md h-[100vh] sm:h-[600px] w-[100vw] sm:w-96 border-0"
+        className="h-[100vh] w-[100vw] overflow-hidden rounded-none border-0 p-0 sm:h-[600px] sm:w-96 sm:rounded-md"
       >
-        <div className="flex flex-col w-full h-full">
-          <div className="w-full p-4 bg-purple-900 flex items-center">
+        <div className="flex h-full w-full flex-col">
+          <div className="flex w-full items-center bg-purple-900 p-4">
             <Bot className="size-6 text-purple-100" />
-            <div className="ml-3 text-purple-100 font-bold">NailsBot</div>
+            <div className="ml-3 font-bold text-purple-100">NailsBot</div>
             <PopoverClose asChild>
-              <Button size="icon" variant="ghost" className="ml-auto text-purple-50 ">
+              <Button size="icon" variant="ghost" className="ml-auto text-purple-50">
                 <X />
               </Button>
             </PopoverClose>
           </div>
 
-          <div className="flex-1 bg-purple-50 h-0">
-            <ScrollArea className="w-full h-full" ref={chatboxRef}>
-              <div className="flex flex-col p-4 gap-3">
+          <div className="h-0 flex-1 bg-purple-50">
+            <ScrollArea className="h-full w-full" ref={chatboxRef}>
+              <div className="flex flex-col gap-3 p-4">
                 {messages.map((message, i) => (
                   <p
                     className={twMerge(
-                      'bg-purple-900 px-4 py-2 rounded-xl text-purple-100 self-end max-w-[75%]',
-                      message.role === 'model' && 'bg-purple-200 text-purple-950 self-start',
+                      "max-w-[75%] self-end rounded-xl bg-purple-900 px-4 py-2 text-purple-100",
+                      message.role === "model" && "self-start bg-purple-200 text-purple-950",
                     )}
                     key={i}
                   >
@@ -136,7 +136,7 @@ export default function AISupport() {
                   </p>
                 ))}
                 {isLoading ? (
-                  <p className="bg-purple-200 px-4 py-2 rounded-xl text-purple-950 self-start max-w-[75%]">
+                  <p className="max-w-[75%] self-start rounded-xl bg-purple-200 px-4 py-2 text-purple-950">
                     <Ellipsis className="size-4" />
                   </p>
                 ) : null}
@@ -148,7 +148,7 @@ export default function AISupport() {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex items-center gap-2 w-full p-4 bg-purple-900"
+                className="flex w-full items-center gap-2 bg-purple-900 p-4"
                 autoComplete="off"
               >
                 <FormField
@@ -160,7 +160,7 @@ export default function AISupport() {
                         <Input
                           placeholder="Escribe tu pregunta"
                           {...field}
-                          className="w-full bg-purple-100 rounded-full"
+                          className="w-full rounded-full bg-purple-100"
                         />
                       </FormControl>
                     </FormItem>

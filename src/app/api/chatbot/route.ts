@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { messageSchema } from '@/types/message'
-import { getPayload } from 'payload'
-import configPromise from '@/payload.config'
+import { GoogleGenerativeAI } from "@google/generative-ai"
+import { messageSchema } from "@/types/message"
+import { getPayload } from "payload"
+import configPromise from "@/payload.config"
 
 export const POST = async (request: Request) => {
   const body = await request.json()
@@ -22,11 +22,11 @@ export const POST = async (request: Request) => {
   const parsedBody = result.data
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string)
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
   const payload = await getPayload({ config: configPromise })
   const { docs: faqs } = await payload.find({
-    collection: 'faq',
+    collection: "faq",
     limit: 20,
   })
 
@@ -53,7 +53,7 @@ export const POST = async (request: Request) => {
   const { response } = await model.generateContent({
     contents: [
       {
-        role: 'model',
+        role: "model",
         parts: [{ text: prompt }],
       },
       ...parsedBody.map((message) => ({

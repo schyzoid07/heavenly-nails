@@ -1,14 +1,14 @@
-import '@/styles/global.css'
-import localFont from 'next/font/local'
-import { cn } from '@/lib/utils'
+import "@/styles/global.css"
+import localFont from "next/font/local"
+import { cn } from "@/lib/utils"
 
 const bellabooFont = localFont({
-  src: '../bellaboo.ttf',
+  src: "../bellaboo.ttf",
 })
 
 export const metadata = {
-  title: 'Heavenly Nails',
-  description: 'sitio web para el negocio de uñas heavenly Nails',
+  title: "Heavenly Nails",
+  description: "sitio web para el negocio de uñas heavenly Nails",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,9 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="es"
       suppressHydrationWarning
-      className={cn(bellabooFont.className, 'scroll-smooth')}
+      className={cn(bellabooFont.className, "scroll-smooth")}
     >
-      <body className={'font-sans antialiased'}>{children}</body>
+      <body className={"font-sans antialiased"}>{children}</body>
     </html>
   )
 }

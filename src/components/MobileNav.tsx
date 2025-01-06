@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight } from "lucide-react"
 import {
   Drawer,
   DrawerClose,
@@ -10,10 +10,10 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
-import { Button } from './ui/button'
-import { Menu } from 'lucide-react'
-import { useRef } from 'react'
+} from "@/components/ui/drawer"
+import { Button } from "./ui/button"
+import { Menu } from "lucide-react"
+import { useRef } from "react"
 
 export default function MobileNav() {
   const pendingScrollRef = useRef<string | null>(null)
@@ -27,13 +27,13 @@ export default function MobileNav() {
       return
     }
 
-    document.documentElement.classList.add('scroll-smooth')
+    document.documentElement.classList.add("scroll-smooth")
 
     if (!pendingScrollRef.current) {
       return
     }
 
-    const link = document.createElement('a')
+    const link = document.createElement("a")
     link.href = `#${pendingScrollRef.current}`
     link.click()
 
@@ -42,7 +42,7 @@ export default function MobileNav() {
 
   const handleOnOpenChange = (open: boolean) => {
     if (open) {
-      document.documentElement.classList.remove('scroll-smooth')
+      document.documentElement.classList.remove("scroll-smooth")
     }
   }
 
@@ -58,33 +58,33 @@ export default function MobileNav() {
           <DrawerTitle className="hidden">Menu</DrawerTitle>
           <DrawerDescription className="hidden">Secciones del sitio</DrawerDescription>
         </DrawerHeader>
-        <nav className="flex  flex-col gap-4 px-5">
+        <nav className="flex flex-col gap-4 px-5">
           <DrawerClose asChild>
-            <Button variant="ghost" onClick={() => handleOnLinkClick('home')}>
+            <Button variant="ghost" onClick={() => handleOnLinkClick("home")}>
               Inicio
               <ChevronRight className="ml-auto size-4" />
             </Button>
           </DrawerClose>
           <DrawerClose asChild>
-            <Button variant="ghost" onClick={() => handleOnLinkClick('services')}>
+            <Button variant="ghost" onClick={() => handleOnLinkClick("services")}>
               Servicios
               <ChevronRight className="ml-auto size-4" />
             </Button>
           </DrawerClose>
           <DrawerClose asChild>
-            <Button variant="ghost" onClick={() => handleOnLinkClick('aboutUs')}>
+            <Button variant="ghost" onClick={() => handleOnLinkClick("aboutUs")}>
               Nosotros
               <ChevronRight className="ml-auto size-4" />
             </Button>
           </DrawerClose>
           <DrawerClose asChild>
-            <Button variant="ghost" onClick={() => handleOnLinkClick('gallery')}>
+            <Button variant="ghost" onClick={() => handleOnLinkClick("gallery")}>
               Galeria
               <ChevronRight className="ml-auto size-4" />
             </Button>
           </DrawerClose>
           <DrawerClose asChild>
-            <Button variant="ghost" onClick={() => handleOnLinkClick('contactUs')}>
+            <Button variant="ghost" onClick={() => handleOnLinkClick("contactUs")}>
               Contacto
               <ChevronRight className="ml-auto size-4" />
             </Button>

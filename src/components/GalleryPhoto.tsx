@@ -1,6 +1,6 @@
-import Image from 'next/image'
+import Image from "next/image"
 
-import { Gallery } from '@/payload-types'
+import { Gallery } from "@/payload-types"
 
 interface Props {
   gallery: Gallery
@@ -8,8 +8,8 @@ interface Props {
 
 export default function GalleryPhoto({ gallery }: Props) {
   return (
-    <div className="flex w-full aspect-square bg-purple-200 group overflow-hidden cursor-pointer">
-      <div className="relative w-full h-full group-hover:scale-125 transition-all">
+    <div className="group flex aspect-square w-full cursor-pointer overflow-hidden bg-purple-200">
+      <div className="relative h-full w-full transition-all group-hover:scale-125">
         {gallery.url && gallery.height && gallery.width ? (
           <Image src={gallery.url} alt={gallery.alt} fill className="object-cover"></Image>
         ) : null}

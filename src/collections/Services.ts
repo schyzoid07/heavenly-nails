@@ -1,23 +1,23 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from "payload"
 
 export const Services: CollectionConfig = {
-  slug: 'services',
+  slug: "services",
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'alt',
-      type: 'text',
+      name: "alt",
+      type: "text",
       required: true,
     },
     {
-      name: 'title',
-      type: 'text',
+      name: "title",
+      type: "text",
     },
     {
-      name: 'description',
-      type: 'text',
+      name: "description",
+      type: "text",
     },
   ],
   upload: true,
