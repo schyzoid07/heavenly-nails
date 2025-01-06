@@ -1,0 +1,186 @@
+'use client'
+import { X } from 'lucide-react'
+import { PopoverClose } from '@radix-ui/react-popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { SendHorizontal } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Bot, Ellipsis } from 'lucide-react'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
+import { useState, useRef, useEffect } from 'react'
+import { Message } from '@/types/message'
+import { twMerge } from 'tailwind-merge'
+
+import { useMediaQuery } from '@uidotdev/usehooks'
+
+const formSchema = z.object({
+  message: z.string(),
+})
+
+export default function AISupport() {
+  const isDesktop = useMediaQuery('(min-width: 640px)')
+  const [isOpen, setIsOpen] = useState(false)
+
+  const chatboxRef = useRef<HTMLDivElement>(null)
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      text: '¡Hola! mi nombre es NailsBot, ¿en qué puedo ayudarte? ',
+      role: 'model',
+    },
+  ])
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: '',
+    },
+  })
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const newMessages = [
+      ...messages,
+      {
+        text: values.message,
+        role: 'user',
+      } satisfies Message,
+    ]
+
+    setMessages(newMessages)
+
+    form.reset()
+    setIsLoading(true)
+
+    fetch('/api/chatbot', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMessages),
+    }).then(async (response) => {
+      const result = await response.json()
+      const parsed = z.object({ result: z.string() }).parse(result)
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: parsed.result,
+          role: 'model',
+        },
+      ])
+      setIsLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    if (!chatboxRef.current) {
+      return
+    }
+
+    chatboxRef.current.children[1].scrollTop = chatboxRef.current.children[1].scrollHeight
+  }, [messages, chatboxRef])
+
+  useEffect(() => {
+    if (isOpen && !isDesktop) {
+      document.body.classList.add('overflow-hidden')
+      return
+    }
+
+    document.body.classList.remove('overflow-hidden')
+  }, [isOpen, isDesktop])
+
+  return (
+    <Popover open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+      <PopoverTrigger asChild>
+        <div className="fixed bottom-4 right-4 bg-purple-900 rounded-full z-10 items-center flex justify-center p-4 cursor-pointer">
+          <Bot className="size-6 text-purple-100" />
+        </div>
+      </PopoverTrigger>
+
+      <PopoverContent
+        side="top"
+        align="end"
+        sideOffset={isDesktop ? 16 : -72}
+        alignOffset={isDesktop ? 0 : -16}
+        className="p-0 overflow-hidden rounded-none sm:rounded-md h-[100vh] sm:h-[600px] w-[100vw] sm:w-96 border-0"
+      >
+        <div className="flex flex-col w-full h-full">
+          <div className="w-full p-4 bg-purple-900 flex items-center">
+            <Bot className="size-6 text-purple-100" />
+            <div className="ml-3 text-purple-100 font-bold">NailsBot</div>
+            <PopoverClose asChild>
+              <Button size="icon" variant="ghost" className="ml-auto text-purple-50 ">
+                <X />
+              </Button>
+            </PopoverClose>
+          </div>
+
+          <div className="flex-1 bg-purple-50 h-0">
+            <ScrollArea className="w-full h-full" ref={chatboxRef}>
+              <div className="flex flex-col p-4 gap-3">
+                {messages.map((message, i) => (
+                  <p
+                    className={twMerge(
+                      'bg-purple-900 px-4 py-2 rounded-xl text-purple-100 self-end max-w-[75%]',
+                      message.role === 'model' && 'bg-purple-200 text-purple-950 self-start',
+                    )}
+                    key={i}
+                  >
+                    {message.text}
+                  </p>
+                ))}
+                {isLoading ? (
+                  <p className="bg-purple-200 px-4 py-2 rounded-xl text-purple-950 self-start max-w-[75%]">
+                    <Ellipsis className="size-4" />
+                  </p>
+                ) : null}
+              </div>
+            </ScrollArea>
+          </div>
+
+          <footer className="w-full">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex items-center gap-2 w-full p-4 bg-purple-900"
+                autoComplete="off"
+              >
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormControl>
+                        <Input
+                          placeholder="Escribe tu pregunta"
+                          {...field}
+                          className="w-full bg-purple-100 rounded-full"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  size="icon"
+                  variant="link"
+                  className="text-purple-100"
+                  disabled={isLoading}
+                >
+                  <SendHorizontal className="size-6" />
+                </Button>
+              </form>
+            </Form>
+          </footer>
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
