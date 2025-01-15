@@ -11,6 +11,7 @@ import { Users } from "./collections/Users"
 import { Gallery } from "./collections/Gallery"
 import { Services } from "./collections/Services"
 import { Faq } from "./collections/Faq"
+import { migrations } from "./migrations"
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,6 +34,7 @@ export default buildConfig({
       url: process.env.DATABASE_URI || "",
       authToken: process.env.DATABASE_TOKEN,
     },
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [
