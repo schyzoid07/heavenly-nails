@@ -16,7 +16,7 @@ import { useState, useRef, useEffect } from "react"
 import { Message } from "@/types/message"
 import { twMerge } from "tailwind-merge"
 
-import { useMediaQuery } from "@uidotdev/usehooks"
+import { useMediaQuery } from "usehooks-ts"
 
 const formSchema = z.object({
   message: z.string(),
