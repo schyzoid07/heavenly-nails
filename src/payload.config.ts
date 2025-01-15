@@ -13,6 +13,8 @@ import { Services } from "./collections/Services"
 import { Faq } from "./collections/Faq"
 import { migrations } from "./migrations"
 
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob"
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -40,5 +42,15 @@ export default buildConfig({
   plugins: [
     payloadCloudPlugin(),
     // storage-adapter-placeholder
+    vercelBlobStorage({
+      enabled: !!process.env.BLOB_READ_WRITE_TOKEN, // Optional, defaults to true
+      // Specify which collections should use Vercel Blob
+      collections: {
+        gallery: true,
+        services: true,
+      },
+      // Token provided by Vercel once Blob storage is added to your Vercel project
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
   ],
 })
